@@ -1,0 +1,469 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Leave Management API",
+    "description": "API documentation for the Leave Management System.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "tags": ["auth"],
+        "requestBody": {
+          "description": "User registration details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+     "/auth/login": {
+      "post": {
+        "summary": "Login a user by staff ID and password",
+        "tags": ["auth"],
+        "requestBody": {
+          "description": "User login details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginSuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+      "/staff/add": {
+      "post": {
+        "summary": "Add a new staff member",
+        "tags": ["staff"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Staff registration details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddStaff"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Staff added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Email already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied (only admin can add staff)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staff/edit/{staff_id}": {
+      "put": {
+        "summary": "Edit an existing staff record",
+        "tags": ["staff"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "staff_id",
+            "in": "path",
+            "required": true,
+            "description": "The staff ID of the record to edit",
+            "schema": {
+              "type": "string",
+              "example": "123456"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Staff record update details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditStaff"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Staff record updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Staff not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied (only admin can edit staff)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/staff/delete/{staff_id}": {
+      "delete": {
+        "summary": "Delete a staff record",
+        "tags": ["staff"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "staff_id",
+            "in": "path",
+            "required": true,
+            "description": "The staff ID of the record to delete",
+            "schema": {
+              "type": "string",
+              "example": "123456"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Staff record deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Staff not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied (only admin can delete staff)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Register": {
+        "type": "object",
+        "required": ["firstname", "lastname", "email", "password"],
+        "properties": {
+          "firstname": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastname": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "securepassword123"
+          }
+        }
+      },
+    "Login": {
+        "type": "object",
+        "required": ["staffID", "password"],
+        "properties": {
+          "staffID": {
+            "type": "string",
+            "example": "admin"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          }
+        }
+      },
+      "LoginSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Login successful"
+          },
+          "status_code": {
+            "type": "integer",
+            "example": 200
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "token": {
+                "type": "string",
+                "example": "jwt_token_here"
+              },
+              "role": {
+                "type": "string",
+                "example": "admin"
+              }
+            }
+          }
+        }
+      },
+      "AddStaff": {
+        "type": "object",
+        "required": ["firstname", "lastname", "email", "lineManagerID"],
+        "properties": {
+          "firstname": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastname": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "lineManagerID": {
+            "type": "string",
+            "example": "123456"
+          },
+          "leaveBalances": {
+            "type": "object",
+            "properties": {
+              "sick_leave": {
+                "type": "integer",
+                "example": 10
+              },
+              "exam_leave": {
+                "type": "integer",
+                "example": 5
+              },
+              "annual_leave": {
+                "type": "integer",
+                "example": 20
+              },
+              "compassionate_leave": {
+                "type": "integer",
+                "example": 0
+              }
+            }
+          }
+        }
+      },
+      "EditStaff": {
+        "type": "object",
+        "properties": {
+          "firstname": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastname": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "lineManagerID": {
+            "type": "string",
+            "example": "123456"
+          },
+          "leaveBalances": {
+            "type": "object",
+            "properties": {
+              "sick_leave": {
+                "type": "integer",
+                "example": 8
+              },
+              "exam_leave": {
+                "type": "integer",
+                "example": 4
+              },
+              "annual_leave": {
+                "type": "integer",
+                "example": 18
+              },
+              "compassionate_leave": {
+                "type": "integer",
+                "example": 0
+              }
+            }
+          }
+        }
+      },
+       "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "User registered successfully"
+          },
+          "status_code": {
+            "type": "integer",
+            "example": 201
+          },
+          "data": {
+            "type": "object",
+            "example": {
+              "email": "john.doe@example.com"
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Invalid credentials"
+          },
+          "status_code": {
+            "type": "integer",
+            "example": 401
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
